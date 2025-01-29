@@ -1,0 +1,110 @@
+html,
+body {
+    margin: 0;
+}
+
+.header {
+    background-color: #F55A5A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+.icon {
+    width: 24px;
+    /* Adjust icon size to better match the text */
+    height: 24px;
+    margin-right: 7px;
+}
+
+.title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: Inter;
+    text-transform: lowercase;
+}
+
+.entry-container {
+    display: flex;
+    max-width: 600px;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin: auto;
+    align-items: flex-start;
+}
+
+.entry-image-container {
+    /* display: flex; */
+    width: 125px;
+    height: 168px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    /* Ensures the image respects border-radius */
+}
+
+.entry-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.entry-content {
+    margin-left: 16px;
+    display: flex;
+    font-style: Inter;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.entry-location {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+    gap: 8px;
+}
+
+.entry-location-icon {
+    color: #ef4444;
+    width: 7px;
+
+}
+
+.entry-location-name {
+    font-size: 10.24px;
+}
+
+.entry-map-link {
+    color: #3b82f6;
+    font-size: 10.24px;
+    text-decoration: underline;
+}
+
+.entry-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 4px;
+}
+
+.entry-date {
+    font-size: 10.24px;
+    font-weight: bold;
+    color: #666;
+}
+
+.entry-description {
+    font-size: 10.24px;
+    font-style: Inter;
+    color: #444;
+    margin-top: 8px;
+    max-width: 320px;
+}
