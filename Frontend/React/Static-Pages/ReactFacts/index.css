@@ -1,0 +1,82 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: #21222A;
+    padding: 10px 20px;
+}
+
+.nav-logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.nav-title {
+    color: #61DAFB;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+body {
+    background-color: #282D35;
+}
+
+.main-content {
+    /* Background color here will not cover whole page*/
+    /* background-color: #282D35; */
+    background-image: url("./images/react-logo-half.png");
+    background-repeat: no-repeat;
+    background-position: right 65%;
+
+    /* background: url("./images/react-logo-half.png") no-repeat right; */
+    color: white;
+    padding: 40px;
+    margin: auto;
+}
+
+.main-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+}
+
+.facts-list {
+    margin-top: 46px;
+    max-width: 700px;
+}
+
+
+.facts-list li {
+    font-size: 1.2rem;
+    margin-block: 10px;
+    /* display: flex; */
+    align-items: center;
+}
+
+.facts-list li::marker {
+    color: #61DAFB;
+    font-size: 1.8rem;
+}
+
+/* with display flex marker doesn't work, In that case, use this code*/
+/* .facts-list li::before {
+    content: "•";
+    color: #61DAFB;
+    font-size: 1.5rem;
+    margin-right: 10px;
+} */
+
+
+/* 
+Challenge: Place the gray react logo in the background
+
+Don't use an `img` element, but rather set it as the
+`background-image` of the `main` element.
+
+Hint: you'll need to use the following properties:
+- background-image: url(...)
+- background-repeat
+- background-position
+
+(Or the shorthand `background` property with values for all
+those other properties)
+*/

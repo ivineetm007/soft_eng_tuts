@@ -1,0 +1,32 @@
+.main-content {
+    background-color: #282D35;
+    color: white;
+    padding: 40px;
+    /* border-radius: 10px; */
+    /* max-width: 600px; */
+    margin: auto;
+}
+
+.main-title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.facts-list {
+    list-style: none;
+    padding: 0;
+}
+
+.facts-list li {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.facts-list li::before {
+    content: "•";
+    color: #61DAFB;
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
