@@ -307,3 +307,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+.bin
+.sqlite3
