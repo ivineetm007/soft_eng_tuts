@@ -2,7 +2,7 @@
 
 1. LangSmith is a platform for building production-grade LLM applications. It allows you to closely monitor and evaluate your application, so you can ship quickly and with confidence.
 
-## RAG from scratch
+# RAG from scratch
 
 1. 95% of the world's data is "private", but we can "feed it" to LLMs
 2. LLM are kind of a CPU of the new type of System
@@ -77,11 +77,24 @@ Pack relevant documents into the context window. Prompt are basically template.
 
 ## Routing
 
+Routing is the process of directing a potentially decomposed question to the right source, which could be a different database, such as a vector store, relational DB, or graph DB
+
+1. Logical Routing- Logical routing involves giving a large language model (LLM) knowledge of various data sources and letting it reason about which one to apply the question to.
+2. Semantic Routing- Routing can be very general and can involve directing a question to different prompts, vector stores, or databases. Semantic routing involves embedding a question and prompts, computing the similarity between them, and choosing a prompt based on the similarity.
+
 ## Query Construction
+
+Query construction is the process of taking natural language and converting it into a structured query that can be applied to metadata filters on a Vector store, GraphDB or SQL.
+
+## Indexing
+
+1. Multi-representation Indexing
+   - The idea is to take a document, split it, and then use an LLM to produce a summary or proposition that is optimized for retrieval, which can be embedded in a vector store.
+   - The raw document is independently stored in a document store, and when the summary is retrieved from the vector store, the full document is returned for the LLM to perform generation
 
 # References
 
-1. RAG from scratch- https://www.youtube.com/watch?v=sVcwVQRHIc8&ab_channel=freeCodeCamp.org, Github -https://github.com/langchain-ai/rag-from-scratch
+1. RAG from scratch- https://www.youtube.com/watch?v=sVcwVQRHIc8&ab_channel=freeCodeCamp.org, Github -https://github.com/langchain-ai/rag-from-scratch, Slides- https://docs.google.com/presentation/d/124I8jlBRCbb0LAUhdmDwbn4nREqxSxZU1RF_eTGXUGc/edit#slide=id.g267060cc54f_0_0
 2. Least-to-Most- https://arxiv.org/pdf/2205.10625
 3. RAG Fusion- https://arxiv.org/pdf/2402.03367
 4. Step-back prompting- https://arxiv.org/pdf/2310.06117
