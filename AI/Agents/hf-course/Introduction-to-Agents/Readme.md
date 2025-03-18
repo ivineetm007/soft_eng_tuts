@@ -181,8 +181,29 @@ ReAct is a simple prompting technique that appends “Let’s think step by step
 Recent models have been trained to always include specific thinking sections (enclosed between <think> and </think> special tokens). This is not just a prompting technique like ReAct, but a training method where the model learns to generate these sections after analyzing thousands of examples that show what we expect it to do.
 
 ### Actions: Enabling the Agent to Engage with Its Environment
+Actions are the **concrete steps an AI agent takes to interact with its environment.**
 
 There are multiple types of Agents that take actions differently:
 1. JSON Agent - The Action to take is specified in JSON format.
 2. Code Agent - The Agent writes a code block that is interpreted externally.
 3. Function-calling Agent- It is a subcategory of the JSON Agent which has been fine-tuned to generate a new message for each action.
+
+One crucial part of an agent is the **ability to STOP generating new tokens when an action is complete.**
+
+**Stop and Parse Approach**
+1. Generation in a Structured Format: The agent outputs its intended action in a clear, predetermined format (JSON or code).
+2. Halting Further Generation: Once the action is complete, the agent stops generating additional tokens. This prevents extra or erroneous output.
+3. Parsing the Output: An external parser reads the formatted action, determines which Tool to call, and extracts the required parameters.
+
+**Code Agents**
+The idea is: instead of outputting a simple JSON object, a Code Agent **generates an executable code block—typically in a high-level language like Python.**
+Code offers greater expressiveness, modularity, and reusability than JSON, making it more flexible for complex logic. It enhances debugability through structured syntax and allows direct integration with external libraries and APIs for advanced operations.
+![Alt text](./code-vs-json-actions.png)
+
+### Observe: Integrating Feedback to Reflect and Adapt
+1. Observations are how an Agent perceives the consequences of its actions.
+2. Observations can take various forms, including system feedback, data changes, environmental data, and time-based events, all of which are appended after executing an action to guide future decisions effectively.
+
+
+
+
