@@ -4,10 +4,10 @@
 ## **What is an Agent**
 An Agent is a system that leverages an AI model to interact with its environment in order to achieve a user-defined objective. In simple terms, we can break down it into two parts
 1. Mind- It is the part where the actual thinking happens which involves reasoning and planning keeping in mind the capabilities or available tools.
-    - The most common model used nowadays is Large Language Model which majorly takes text as input and output. The popeular models involve GPT-4 by openai, LLama by Meta. 
+    - The most common model used nowadays is Large Language Model which majorly takes text as input and output. The popular models involve GPT-4 by openai, LLama by Meta. 
 2. Body- It defines the scope of the possible actions based on the capabilities (tool) it is equipped with.
 
-Agents can act as Peronsal Virtual Assistant which can schedule meetings, setup alarms and many other personal tasks on behalf of the user; Customer service Chatbots which interacts with customers to resolve queries, troubleshooting based on the pre-defined objectives of decreasing wait time, increasing sales conversion etc. They also enable to create dynamic Non-Playable Characters in games which helps create more lifelike, engaging characters that evolve alongside the player’s actions.
+Agents can act as Personal Virtual Assistant which can schedule meetings, setup alarms and many other personal tasks on behalf of the user; Customer service Chatbots which interacts with customers to resolve queries, troubleshooting based on the pre-defined objectives of decreasing wait time, increasing sales conversion etc. They also enable to create dynamic Non-Playable Characters in games which helps create more lifelike, engaging characters that evolve alongside the player’s actions.
 
 ## **What are LLMs**
 1. Large Language Model- It is a type of AI model that excels at understanding and generating human language. Most LLMs nowadays are built on the Transformer architecture which are of three types
@@ -28,7 +28,7 @@ Agents can act as Peronsal Virtual Assistant which can schedule meetings, setup 
 | SmolLM2    | Hugging Face                 | `<\|im_end\|>`          | End of instruction or message |
 | Gemma      | Google                       | `<end_of_turn>`       | End of conversation turn      |
 
-3. Next token prediction- The model taked tokenized text as input, encode it and outputs scores that rank the likelihood of each token in its vocabulary as being the next one in the sequence.
+3. Next token prediction- The model takes tokenized text as input, encode it and outputs scores that rank the likelihood of each token in its vocabulary as being the next one in the sequence.
     - Simple strategy- It would be to always take the token with the maximum score.
     - Bit advanced strategies- Beam search explores multiple candidate sequences to find the one with the maximum total score–even if some individual tokens have lower scores.
 4. How are LLMs trained
@@ -102,6 +102,7 @@ You are a helpful AI assistant named SmolLM, trained by Hugging Face
 
 ### What are AI tools
 A Tool is a **function given to the LLM**. This function should **fulfill a clear objective**.
+
 |Tool	|Description|
 |-------|---------|
 |Web Search	| Allows the agent to fetch up-to-date information from the internet.|
@@ -114,3 +115,74 @@ A tool should contain
 - A Callable (something to perform an action).
 - Arguments with typings.
 - (Optional) Outputs with typings.
+
+### How do tools work?
+We teach the LLM about the existence of tools, and ask the model to generate text that will invoke tools when it needs to. The LLM will generate text, in the form of code, to invoke that tool. It is the responsibility of the Agent to parse the LLM’s output, recognize that a tool call is required, and invoke the tool on the LLM’s behalf.
+
+### How do we give tools to an LLM?
+We essentially use the system prompt to provide textual descriptions of available tools to the model.
+Example, to implement a calculator tool-
+```
+Python Implementation
+def calculator(a: int, b: int) -> int:
+    """Multiply two integers."""
+    return a * b
+    
+Tool Definition string for LLM
+Tool Name: calculator, Description: Multiply two integers., Arguments: a: int, b: int, Outputs: int
+
+# To build description automatically
+@tool
+def calculator(a: int, b: int) -> int:
+    """Multiply two integers."""
+    return a * b
+
+print(calculator.to_string())
+```
+The description is **injected** in the system prompt.
+
+## AI Agent Workflow
+
+### Thought-Action-Observation Cycle
+1. Thought: The LLM part of the Agent decides what the next step should be.
+2. Action: The agent takes an action, by calling the tools with the associated arguments.
+3. Observation: The model reflects on the response from the tool.
+4. These three components work together in a continuous loop until the objective of the agent has been fulfilled.
+5. In many Agent frameworks, **the rules and guidelines are embedded directly into the system prompt**, ensuring that every cycle adheres to a defined logic.
+```
+# EXAMPLE
+system_message="""You are an AI assistant designed to help users efficiently and accurately. Your
+primary goal is to provide helpful, precise, and clear responses.
+
+You have access to the following tools:
+Tool Name: calculator, Description: Multiply two integers., Arguments: a: int, b: int, Outputs: int
+
+You should think step by step in order to fulfill the objective with a reasoning divided in
+Thought/Action/Observation that can repeat multiple times if needed.
+
+You should first reflect with ‘Thought: {your_thoughts}’ on the current situation,
+then (if necessary ), call a tool with the proper JSON formatting ‘Action: {JSON_BLOB}’, or your print
+your final answer starting with the prefix ‘Final Answer:’"""
+```
+
+### Thought: Internal Reasoning and the Re-Act Approach
+Thoughts represent the Agent’s internal reasoning and planning processes to solve the task. In the case of LLMs fine-tuned for function-calling, the thought process is optional. In case you’re not familiar with function-calling, there will be more details in the Actions section.
+1. Planning- “I need to break this task into three steps: 1) gather data, 2) analyze trends, 3) generate report”
+2. Analysis- “Based on the error message, the issue appears to be with the database connection parameters”
+3. Decision Making-	“Given the user’s budget constraints, I should recommend the mid-tier option”
+4. Problem Solving-	“To optimize this code, I should first profile it to identify bottlenecks”
+5. Memory Integration- “The user mentioned their preference for Python earlier, so I’ll provide examples in Python”
+6. Self-Reflection-	“My last approach didn’t work well, I should try a different strategy”
+7. Goal Setting- “To complete this task, I need to first establish the acceptance criteria”
+8. Prioritization- “The security vulnerability should be addressed before adding new features”
+
+**The Re-Act Approach**
+ReAct is a simple prompting technique that appends “Let’s think step by step” before letting the LLM decode the next tokens. Indeed, prompting the model to think “step by step” encourages the decoding process toward next tokens that generate a plan, rather than a final solution, since the model is encouraged to decompose the problem into sub-tasks.
+Recent models have been trained to always include specific thinking sections (enclosed between <think> and </think> special tokens). This is not just a prompting technique like ReAct, but a training method where the model learns to generate these sections after analyzing thousands of examples that show what we expect it to do.
+
+### Actions: Enabling the Agent to Engage with Its Environment
+
+There are multiple types of Agents that take actions differently:
+1. JSON Agent - The Action to take is specified in JSON format.
+2. Code Agent - The Agent writes a code block that is interpreted externally.
+3. Function-calling Agent- It is a subcategory of the JSON Agent which has been fine-tuned to generate a new message for each action.
