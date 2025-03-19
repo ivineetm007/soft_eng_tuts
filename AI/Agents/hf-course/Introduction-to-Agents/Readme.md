@@ -204,6 +204,11 @@ Code offers greater expressiveness, modularity, and reusability than JSON, makin
 1. Observations are how an Agent perceives the consequences of its actions.
 2. Observations can take various forms, including system feedback, data changes, environmental data, and time-based events, all of which are appended after executing an action to guide future decisions effectively.
 
+## Build your agent
+
+## Using smolagent
+`smolagent` is a library that provides a framework for developing your agents with ease.
+1. Gradio space for the first agent- https://huggingface.co/spaces/vinm007/First_agent_template
 
 
 
