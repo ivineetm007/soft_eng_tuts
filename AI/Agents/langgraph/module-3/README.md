@@ -26,10 +26,10 @@ LangGraph has **first-class streaming support**, providing multiple ways to obse
 
 Use `.stream` (sync) or `.astream` (async) to stream graph execution. Two primary modes:
 
-| Mode | What it emits | Use case |
-|---|---|---|
-| `stream_mode="values"` | **Full state** after each node runs (first chunk = initial input) | When you need the complete state snapshot at each step |
-| `stream_mode="updates"` | **Only the updates** (delta) from each node | When you only care about what changed |
+| Mode                    | What it emits                                                     | Use case                                               |
+| ----------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
+| `stream_mode="values"`  | **Full state** after each node runs (first chunk = initial input) | When you need the complete state snapshot at each step |
+| `stream_mode="updates"` | **Only the updates** (delta) from each node                       | When you only care about what changed                  |
 
 #### Updates Mode
 
@@ -74,12 +74,12 @@ async for event in graph.astream_events(
 
 Each event is a dict with key fields:
 
-| Field | Description |
-|---|---|
-| `event` | Type of event (e.g., `on_chat_model_stream`) |
-| `name` | Name of the component (e.g., `ChatOpenAI`) |
-| `data` | Event payload — for token streaming, contains `AIMessageChunk` |
-| `metadata` | Includes `langgraph_node` — the node that emitted the event |
+| Field      | Description                                                    |
+| ---------- | -------------------------------------------------------------- |
+| `event`    | Type of event (e.g., `on_chat_model_stream`)                   |
+| `name`     | Name of the component (e.g., `ChatOpenAI`)                     |
+| `data`     | Event payload — for token streaming, contains `AIMessageChunk` |
+| `metadata` | Includes `langgraph_node` — the node that emitted the event    |
 
 Use `event['metadata']['langgraph_node']` to filter tokens from a specific node.
 
@@ -96,6 +96,7 @@ Breakpoints **pause graph execution** at specified nodes, enabling human approva
 ### Why Human-in-the-Loop?
 
 Three core motivations:
+
 1. **Approval** — Interrupt the agent, surface state, and let the user accept or reject an action
 2. **Debugging** — Rewind the graph to reproduce or avoid issues
 3. **Editing** — Modify the graph state directly
@@ -170,7 +171,7 @@ While static breakpoints are set at compile time, **dynamic breakpoints** let a 
 
 ### `NodeInterrupt`
 
-Use `NodeInterrupt` to conditionally halt execution from *inside* a node:
+Use `NodeInterrupt` to conditionally halt execution from _inside_ a node:
 
 ```python
 from langgraph.errors import NodeInterrupt
@@ -185,12 +186,12 @@ def my_node(state: State):
 
 ### Key Difference from Static Breakpoints
 
-| Feature | Static Breakpoint | Dynamic Breakpoint (`NodeInterrupt`) |
-|---|---|---|
-| When defined | Compile time (`interrupt_before`/`interrupt_after`) | Runtime (inside a node function) |
-| Conditional | No — always fires | Yes — based on any logic |
-| Where it stops | Before/after a specific node | At the exact point the exception is raised |
-| Resuming behavior | Resumes from saved state | Re-executes the node; if the same condition is met → interrupts again |
+| Feature           | Static Breakpoint                                   | Dynamic Breakpoint (`NodeInterrupt`)                                  |
+| ----------------- | --------------------------------------------------- | --------------------------------------------------------------------- |
+| When defined      | Compile time (`interrupt_before`/`interrupt_after`) | Runtime (inside a node function)                                      |
+| Conditional       | No — always fires                                   | Yes — based on any logic                                              |
+| Where it stops    | Before/after a specific node                        | At the exact point the exception is raised                            |
+| Resuming behavior | Resumes from saved state                            | Re-executes the node; if the same condition is met → interrupts again |
 
 ### Inspecting Interrupts
 
@@ -336,6 +337,7 @@ len(all_states)  # e.g., 5 states for a 3-step execution + initial + empty
 ```
 
 Each `StateSnapshot` includes:
+
 - `values` — the state data at that checkpoint
 - `next` — which node(s) would run next
 - `config` — contains `thread_id` and `checkpoint_id`
@@ -378,6 +380,7 @@ for event in graph.stream(None, fork_config, stream_mode="values"):
 ```
 
 Key mechanics:
+
 - `update_state` with a past `config` creates a **new checkpoint** (new `checkpoint_id`)
 - The `next` metadata is preserved — the graph knows which node to run
 - Passing the **same message ID** overwrites the message (via the `add_messages` reducer)
@@ -397,17 +400,17 @@ Forked:      Modified Input → Assistant → Tools → Assistant → END
 
 ## 6. Key Takeaways
 
-| Concept | Key Insight |
-|---|---|
-| **Streaming (values)** | Emits full state after each node; first chunk is the initial input |
-| **Streaming (updates)** | Emits only deltas; each chunk keyed by node name |
-| **Token streaming** | Use `astream_events` with `on_chat_model_stream` to get individual tokens |
-| **Static breakpoints** | Set at compile time with `interrupt_before`/`interrupt_after`; requires a checkpointer |
-| **Dynamic breakpoints** | `NodeInterrupt` inside a node for conditional pausing; re-interrupts if condition still holds |
-| **State editing** | `update_state` modifies state at a breakpoint; uses `add_messages` ID matching for message overwrites |
-| **Human feedback node** | No-op node + `interrupt_before` + `update_state(as_node=...)` for structured human input |
-| **Replay** | Pass a past checkpoint's `config` to `stream(None, config)` to re-execute from that point |
-| **Fork** | `update_state` on a past checkpoint with modified data creates a new branch with a new `checkpoint_id` |
+| Concept                 | Key Insight                                                                                            |
+| ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Streaming (values)**  | Emits full state after each node; first chunk is the initial input                                     |
+| **Streaming (updates)** | Emits only deltas; each chunk keyed by node name                                                       |
+| **Token streaming**     | Use `astream_events` with `on_chat_model_stream` to get individual tokens                              |
+| **Static breakpoints**  | Set at compile time with `interrupt_before`/`interrupt_after`; requires a checkpointer                 |
+| **Dynamic breakpoints** | `NodeInterrupt` inside a node for conditional pausing; re-interrupts if condition still holds          |
+| **State editing**       | `update_state` modifies state at a breakpoint; uses `add_messages` ID matching for message overwrites  |
+| **Human feedback node** | No-op node + `interrupt_before` + `update_state(as_node=...)` for structured human input               |
+| **Replay**              | Pass a past checkpoint's `config` to `stream(None, config)` to re-execute from that point              |
+| **Fork**                | `update_state` on a past checkpoint with modified data creates a new branch with a new `checkpoint_id` |
 
 ---
 
@@ -425,6 +428,7 @@ export LANGSMITH_PROJECT=langchain-academy
 ```
 
 **Packages:**
+
 ```bash
 pip install langchain_core langgraph langchain_openai langchain_google_genai langgraph_sdk langgraph-prebuilt
 ```
